@@ -45,12 +45,39 @@ describe('MatrixGeneratorService', () => {
       const rows = 5;
       const columns = 10;
       const expectedOnes = 15;
-      const holeEvery = 3
       const unstructuredMatrix = service.getUnstructuredMatrixWithHoles(rows, columns, expectedOnes, 3);
 
       expectOnes(unstructuredMatrix, expectedOnes);
       expectRows(unstructuredMatrix, rows)
       expectColumns(unstructuredMatrix, columns)
+    }
+  });
+
+  it('should generate a gaussian blurred matrix', () => {
+    for (let index = 0; index < randomTestsToRun; index++) {
+      const rows = 5;
+      const columns = 10;
+      const expectedOnes = 15;
+      const blurredMatrix = service.getBlurredUnstructuredMatrix(rows, columns, expectedOnes, 2);
+
+      expectOnes(blurredMatrix, expectedOnes);
+      expectRows(blurredMatrix, rows)
+      expectColumns(blurredMatrix, columns)
+    }
+  });
+
+  
+
+  it('should generate an unstructured gaussian clustered matrix', () => {
+    for (let index = 0; index < randomTestsToRun; index++) {
+      const rows = 5;
+      const columns = 10;
+      const expectedOnes = 15;
+      const blurredMatrix = service.getUnstructuredMatrixWithGaussianClusters(rows, columns, expectedOnes);
+
+      expectOnes(blurredMatrix, expectedOnes);
+      expectRows(blurredMatrix, rows)
+      expectColumns(blurredMatrix, columns)
     }
   });
 

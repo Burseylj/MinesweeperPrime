@@ -1,0 +1,13 @@
+<select [(ngModel)]="selectedAlgorithm" (change)="selectBoardgenAlgorithm(selectedAlgorithm)">
+  <option *ngFor="let algorithm of getAlgorithmEnumKeys()" [value]="algorithm">{{ algorithm }}</option>
+</select>
+
+<select [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
+  <option *ngFor="let adjacency of getAdjacencyEnumKeys()" [value]="adjacency">{{ adjacency }}</option>
+</select>
+
+<!-- ToolbarComponent template -->
+<button (click)="toggleMode()">
+    Toggle Mode: {{ currentMode }}
+</button>
+  

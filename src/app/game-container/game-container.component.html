@@ -1,0 +1,12 @@
+<div class="toolbar">
+  <mspp-toolbar (algorithmSelected)="onBoardgenAlgorithmChanged($event)"
+    (modeChanged)="onModeChanged($event)"
+    (adjacencyChanged)="onAdjacencyTypeChanged($event)"></mspp-toolbar>
+</div>
+
+<button (click)="startGame()">Start Game</button>
+
+<ng-container [ngSwitch]="mode">
+  <mspp-game-board *ngSwitchCase="GameMode.GAME" [cells]="cells" [adjacencies]="adjacencies"></mspp-game-board>
+  <mspp-debug-board *ngSwitchCase="GameMode.DEBUG" [cells]="cells"></mspp-debug-board>
+</ng-container>

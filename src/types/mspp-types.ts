@@ -1,7 +1,51 @@
 export type BinaryMatrix = number[][];
 
-export enum Algorithm {
-    Zero = 'Zero',
-    Unstructured = 'Unstructured',
-    HoleEveryThree = 'HoleEveryThree'
-  }
+export enum BoardgenAlgorithm {
+  Zero = 'Zero',
+  Unstructured = 'Unstructured',
+  HoleEveryThree = 'HoleEveryThree',
+  GaussianBlur = 'GaussianBlur',
+  TripleGaussianBlur = 'TripleGaussianBlur',
+  GaussianBlurWithUnstructured = 'GaussianBlurWithUnstructured'
+}
+
+export enum AdjacencyType {
+  Standard = "Standard",
+  NoDiagonal = "NoDiagonal",
+}
+
+export const AdjacencyConfig: { [key in AdjacencyType]: Vector[] } = {
+  [AdjacencyType.Standard]: [
+    { x: -1, y: -1 },
+    { x: -1, y: 0 },
+    { x: -1, y: 1 },
+    { x: 0, y: 1 },
+    { x: 1, y: 1 },
+    { x: 1, y: 0 },
+    { x: 1, y: -1 },
+    { x: 0, y: -1 }
+  ],
+  [AdjacencyType.NoDiagonal]: [
+    { x: -1, y: 0 },
+    { x: 0, y: 1 },
+    { x: 1, y: 0 },
+    { x: 0, y: -1 }
+  ]
+};
+
+export interface Vector {
+  x: number,
+  y: number
+}
+
+export interface Cell {
+  isMine: boolean,
+  isRevealed: boolean,
+  isMarked: boolean,
+  adjacentMines: number
+}
+
+export enum GameMode {
+  GAME = 'game',
+  DEBUG = 'debug'
+}

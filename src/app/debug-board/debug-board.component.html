@@ -1,14 +1,7 @@
-<button (click)="getBoard()">Generate Board</button>
-
-<select [(ngModel)]="selectedAlgorithm">
-  <option *ngFor="let algorithm of getAlgorithmEnumKeys()" [value]="algorithm">{{ algorithm }}</option>
-</select>
-
-
 <table class="grid">
-  <tr *ngFor="let row of minefield">
+  <tr *ngFor="let row of cells">
     <td *ngFor="let cell of row" class="cell">
-      {{ cell == 1 ? "X" : "" }}
+      {{ cell.isMine ? "X" : "" }}
     </td>
   </tr>
 </table>
