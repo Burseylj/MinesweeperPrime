@@ -4,12 +4,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { DebugBoardComponent } from './debug-board/debug-board.component';
 import { FormsModule } from '@angular/forms';
+import { GameBoardComponent } from './game-board/game-board.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DebugBoardComponent
+    DebugBoardComponent,
+    GameBoardComponent
   ],
   imports: [
     BrowserModule,

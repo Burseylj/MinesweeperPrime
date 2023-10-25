@@ -1,0 +1,9 @@
+<div *ngFor="let row of cells; let rowIdx = index">
+    <span *ngFor="let cell of row; let colIdx = index"
+        [class.revealed]="cell.isRevealed"
+        [class.mine]="cell.isMine && cell.isRevealed" 
+        (click)="cellClicked(rowIdx, colIdx, $event)"
+        (contextmenu)="cellRightClicked(rowIdx, colIdx, $event)">
+        {{ getCellContent(cell) }}
+    </span>
+</div>

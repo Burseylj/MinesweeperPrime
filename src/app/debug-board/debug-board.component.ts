@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatrixGeneratorService } from '../core/matrix-generator.service';
 import { Algorithm } from 'src/types/mspp-types';
 
@@ -8,7 +8,7 @@ import { Algorithm } from 'src/types/mspp-types';
   templateUrl: './debug-board.component.html',
   styleUrls: ['./debug-board.component.scss']
 })
-export class DebugBoardComponent implements OnInit {
+export class DebugBoardComponent {
 
   minefield: number[][] = [];
   rows: number = 16;
@@ -20,9 +20,6 @@ export class DebugBoardComponent implements OnInit {
 
   //todo: set seed, set algorithm, button to reload that shows seed
   constructor(private matrixGeneratorService: MatrixGeneratorService) { }
-
-  ngOnInit(): void {
-  }
 
   getBoard() {
     switch (this.selectedAlgorithm) {
