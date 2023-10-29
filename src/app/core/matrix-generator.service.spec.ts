@@ -81,6 +81,45 @@ describe('MatrixGeneratorService', () => {
     }
   });
 
+  it('should generate a perlin matrix', () => {
+    for (let index = 0; index < randomTestsToRun; index++) {
+      const rows = 5;
+      const columns = 10;
+      const expectedOnes = 15;
+      const blurredMatrix = service.getPerlinMatrix(rows, columns, expectedOnes);
+
+      expectOnes(blurredMatrix, expectedOnes);
+      expectRows(blurredMatrix, rows)
+      expectColumns(blurredMatrix, columns)
+    }
+  });
+
+  it('should generate a simplex matrix', () => {
+    for (let index = 0; index < randomTestsToRun; index++) {
+      const rows = 5;
+      const columns = 10;
+      const expectedOnes = 15;
+      const blurredMatrix = service.getSimplexMatrix(rows, columns, expectedOnes);
+
+      expectOnes(blurredMatrix, expectedOnes);
+      expectRows(blurredMatrix, rows)
+      expectColumns(blurredMatrix, columns)
+    }
+  });
+
+  it('should generate a simplex + unstructured matrix', () => {
+    for (let index = 0; index < randomTestsToRun; index++) {
+      const rows = 5;
+      const columns = 10;
+      const expectedOnes = 15;
+      const blurredMatrix = service.getUnstructuredMatrixWithSimplexClusters(rows, columns, expectedOnes);
+
+      expectOnes(blurredMatrix, expectedOnes);
+      expectRows(blurredMatrix, rows)
+      expectColumns(blurredMatrix, columns)
+    }
+  });
+
   function expectOnes(matrix: BinaryMatrix, expectedOnes: number): void {
     let count = 0;
     matrix.forEach(row => {

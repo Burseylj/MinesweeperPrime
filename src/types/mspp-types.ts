@@ -6,7 +6,10 @@ export enum BoardgenAlgorithm {
   HoleEveryThree = 'HoleEveryThree',
   GaussianBlur = 'GaussianBlur',
   TripleGaussianBlur = 'TripleGaussianBlur',
-  GaussianBlurWithUnstructured = 'GaussianBlurWithUnstructured'
+  GaussianBlurWithUnstructured = 'GaussianBlurWithUnstructured',
+  Perlin = 'Perlin',
+  Simplex = 'Simplex',
+  UnstructuredWithSimplex = 'UnstructuredWithSimplex'
 }
 
 export enum AdjacencyType {
@@ -48,4 +51,9 @@ export interface Cell {
 export enum GameMode {
   GAME = 'game',
   DEBUG = 'debug'
+}
+
+export interface CellEvent {
+  row: number;
+  col: number;
 }

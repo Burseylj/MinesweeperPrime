@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BinaryMatrix } from 'src/types/mspp-types';
+import { Noise } from 'noisejs';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class MatrixGeneratorService {
+
   constructor() { }
 
   getZeroMatrix(rows: number, columns: number): BinaryMatrix {
@@ -12,10 +15,9 @@ export class MatrixGeneratorService {
   }
 
   // unstructured matrix, that is, a purely random binary matrix 
-
   getUnstructuredMatrix(rows: number, columns: number, mines: number): BinaryMatrix {
     const matrix = this.getZeroMatrix(rows, columns);
-    return this.placeMines(matrix, mines);
+    return this.placeUnstructuredMines(matrix, mines);
   }
 
   // unstructured matrix which does not have a cell on every (holeEvery)th cell
@@ -38,6 +40,7 @@ export class MatrixGeneratorService {
     return matrix;
   }
 
+  //gaussian blur applied to unstructured matrix ("censoring" type of blur in visual processing)
   getBlurredUnstructuredMatrix(rows: number, columns: number, mines: number, blurs: number = 1): BinaryMatrix {
     let matrix = this.getUnstructuredMatrix(rows, columns, mines);
 
@@ -48,15 +51,34 @@ export class MatrixGeneratorService {
     return this.roundTopNValues(matrix, mines);
   }
 
-  getUnstructuredMatrixWithGaussianClusters(rows: number, columns: number, mines: number) {
+  // gaussian and unstructured strategies mixed
+  getUnstructuredMatrixWithGaussianClusters(rows: number, columns: number, mines: number): BinaryMatrix {
     let clusteredMines = Math.round(mines/2)
     let unstructuredMines = mines - clusteredMines
     let clusterMatrix = this.getBlurredUnstructuredMatrix(rows, columns, clusteredMines);
-    console.log(this.countMines(clusterMatrix) + " in cluster mx")
-    return this.placeMines(clusterMatrix, unstructuredMines)
+    return this.placeUnstructuredMines(clusterMatrix, unstructuredMines)
   }
 
-  private placeMines(matrix: BinaryMatrix, mines: number): BinaryMatrix {
+  //perlin noise matrix, more organic looking noise
+  getPerlinMatrix(rows: number, columns: number, mines: number): BinaryMatrix {
+    return this.roundTopNValues(this.generatePerlinMatrix(rows, columns), mines)
+  }
+
+  //simplex noise, more organic noise
+  getSimplexMatrix(rows: number, columns: number, mines: number): BinaryMatrix {
+    return this.roundTopNValues(this.generateSimplexMatrix(rows, columns), mines)
+  }
+
+  //simplex and unstructured strategies mixed
+  getUnstructuredMatrixWithSimplexClusters(rows: number, columns: number, mines: number): BinaryMatrix {
+
+    let clusteredMines = Math.round(mines*3/4)
+    let unstructuredMines = mines - clusteredMines
+    let clusterMatrix = this.getSimplexMatrix(rows, columns, clusteredMines);
+    return this.placeUnstructuredMines(clusterMatrix, unstructuredMines)
+  }
+
+  private placeUnstructuredMines(matrix: BinaryMatrix, mines: number): BinaryMatrix {
     let minesPlaced = 0;
     const rows = matrix.length;
     const columns = matrix[0].length;
@@ -73,15 +95,17 @@ export class MatrixGeneratorService {
 
     return matrix;
   }
+  
+  gaussian3Kernel = [
+    [0.077847, 0.123317, 0.077847],
+    [0.123317, 0.195346, 0.123317],
+    [0.077847, 0.123317, 0.077847],
+  ];
 
-  private applyGaussianBlur(matrix: BinaryMatrix): number[][] {
+  private applyGaussianBlur(matrix: number[][], kernel: number[][] = this.gaussian3Kernel): number[][] {
     const rows = matrix.length;
     const cols = matrix[0].length;
-    const kernel = [
-      [0.077847, 0.123317, 0.077847],
-      [0.123317, 0.195346, 0.123317],
-      [0.077847, 0.123317, 0.077847],
-    ];
+    
 
     const output: number[][] = Array.from({ length: rows }, () => Array(cols).fill(0));
 
@@ -105,7 +129,7 @@ export class MatrixGeneratorService {
   }
 
 
-  roundTopNValues(matrix: number[][], n: number): BinaryMatrix {
+  private roundTopNValues(matrix: number[][], n: number): BinaryMatrix {
     const rows = matrix.length;
     const cols = matrix[0].length;
   
@@ -128,7 +152,6 @@ export class MatrixGeneratorService {
     return output;
   }
   
-
   private countMines(matrix: BinaryMatrix): number {
     let count = 0;
     for (let i = 0; i < matrix.length; i++) {
@@ -141,5 +164,29 @@ export class MatrixGeneratorService {
     return count;
   }
 
+ private generatePerlinMatrix(rows: number, cols: number, scale: number = 0.4): number[][] {
+    const noise = new Noise(Math.random());
+    const matrix: number[][] = Array.from({ length: rows }, () => Array(cols).fill(0));
 
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const noiseValue = noise.perlin2(i * scale, j * scale);
+        matrix[i][j] = noiseValue;
+      }
+    }
+    return matrix;
+  }
+
+  private generateSimplexMatrix(rows: number, cols: number, scale: number = 0.2): number[][] {
+    const noise = new Noise(Math.random());
+    const matrix: number[][] = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const noiseValue = noise.simplex2(i * scale, j * scale);
+        matrix[i][j] = noiseValue;
+      }
+    }
+    return matrix;
+  }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardgenAlgorithm, Cell, GameMode } from 'src/types/mspp-types';
+import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardgenAlgorithm, Cell, CellEvent, GameMode } from 'src/types/mspp-types';
 import { MatrixGeneratorService } from '../core/matrix-generator.service';
 
 @Component({
@@ -18,6 +18,7 @@ export class GameContainerComponent {
   adjacencies = AdjacencyConfig[this.selectedAdjacencyType];
 
   GameMode = GameMode
+
 
   //todo: set seed, set algorithm, button to reload that shows seed
   constructor(private matrixGeneratorService: MatrixGeneratorService, private cdr: ChangeDetectorRef) { }
@@ -42,6 +43,50 @@ export class GameContainerComponent {
     this.cdr.detectChanges()
   }
 
+  handleCellClickedEvent(event: CellEvent): void {
+    const cell = this.cells[event.row][event.col];
+    if (!cell.isMarked) {
+
+      if (cell.isMine) {
+        alert("Game Over: You clicked on a mine!");
+        cell.isRevealed = true
+        return;
+      } else {
+
+        this.revealAdjacentCells(event.row, event.col)
+      }
+    }
+  }
+
+  private revealAdjacentCells(row: number, column: number): void {
+    const stack: { row: number, col: number }[] = [{ row, col: column }];
+    while (stack.length > 0) {
+      const { row, col } = stack.pop()!;
+
+      if (!(this.cells[row][col].isRevealed || this.cells[row][col].isMarked)) {
+        this.cells[row][col].isRevealed = true;
+
+        if (this.cells[row][col].adjacentMines === 0) {
+          for (const { x, y } of this.adjacencies) {
+            const newRow = row + x;
+            const newCol = col + y;
+
+            if (newRow >= 0 && newRow < this.rows && newCol >= 0 && newCol < this.columns) {
+              stack.push({ row: newRow, col: newCol });
+            }
+          }
+        }
+      }
+    }
+  }
+
+  handleCellRightClickedEvent(event: CellEvent): void {
+    const cell = this.cells[event.row][event.col];
+    if (!cell.isRevealed) {
+      cell.isMarked = !cell.isMarked;
+    }
+  }
+
   private getMatrix(): BinaryMatrix {
     switch (this.boardgenAlgoritm) {
       case BoardgenAlgorithm.Zero:
@@ -56,6 +101,12 @@ export class GameContainerComponent {
         return this.matrixGeneratorService.getBlurredUnstructuredMatrix(this.rows, this.columns, this.mines, 3);
       case BoardgenAlgorithm.GaussianBlurWithUnstructured:
         return this.matrixGeneratorService.getUnstructuredMatrixWithGaussianClusters(this.rows, this.columns, this.mines)
+      case BoardgenAlgorithm.Perlin:
+        return this.matrixGeneratorService.getPerlinMatrix(this.rows, this.columns, this.mines)
+      case BoardgenAlgorithm.Simplex:
+        return this.matrixGeneratorService.getSimplexMatrix(this.rows, this.columns, this.mines)
+      case BoardgenAlgorithm.UnstructuredWithSimplex:
+        return this.matrixGeneratorService.getUnstructuredMatrixWithSimplexClusters(this.rows, this.columns, this.mines)
     }
   }
 
