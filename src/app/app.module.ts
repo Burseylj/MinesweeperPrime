@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { GameBoardComponent } from './game-board/game-board.component';
 import { GameContainerComponent } from './game-container/game-container.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 
@@ -21,8 +20,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    ScrollingModule
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
