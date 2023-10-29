@@ -17,10 +17,6 @@ export class GameBoardComponent implements OnInit {
   @Output()
   cellRightClicked: EventEmitter<CellEvent> = new EventEmitter<CellEvent>();
 
-  rows: number = 16;
-  columns: number = 31;
-  mines: number = 70;
-
   ngOnInit(): void {
   }
 

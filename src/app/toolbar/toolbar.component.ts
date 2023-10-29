@@ -1,43 +1,65 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { AdjacencyType, BoardgenAlgorithm, GameMode } from 'src/types/mspp-types';
+import { Component, OnInit } from '@angular/core';
+import { StateService } from '../core/state-service.service';
+import { BoardgenAlgorithm, GameMode, AdjacencyType } from 'src/types/mspp-types';
 
 @Component({
   selector: 'mspp-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent {
-  @Output() algorithmSelected = new EventEmitter<BoardgenAlgorithm>();
-  @Output() modeChanged = new EventEmitter<GameMode>();
-  @Output() adjacencyChanged = new EventEmitter<AdjacencyType>();
-
-  
-  selectedAlgorithm: BoardgenAlgorithm = BoardgenAlgorithm.Zero
-  currentMode: GameMode = GameMode.GAME
-  selectedAdjacency: AdjacencyType = AdjacencyType.Standard;
-  //expose to template
-  GameMode = GameMode
-  Algorithm = BoardgenAlgorithm
+export class ToolbarComponent implements OnInit {
+  // Expose to template
+  GameMode = GameMode;
+  Algorithm = BoardgenAlgorithm;
   AdjacencyType = AdjacencyType;
 
+  constructor(private stateService: StateService) {}
+
+  ngOnInit(): void {
+    // Subscribe to the observable to update component state
+    this.stateService.mode$.subscribe(mode => {
+      this.currentMode = mode;
+    });
+
+    this.stateService.selectedAdjacencyType$.subscribe(adjacency => {
+      this.selectedAdjacency = adjacency;
+    });
+
+    this.stateService.boardgenAlgorithm$.subscribe(alg => {
+      this.selectedAlgorithm = alg;
+    });
+
+    this.stateService.isInfiniteScroll$.subscribe(scroll => {
+      this.isInfiniteScroll = scroll;
+    });
+  }
+
+  currentMode: GameMode = GameMode.GAME;
+  selectedAlgorithm: BoardgenAlgorithm = BoardgenAlgorithm.Zero;
+  selectedAdjacency: AdjacencyType = AdjacencyType.Standard;
+  isInfiniteScroll: boolean = false
+
   selectBoardgenAlgorithm(algorithm: BoardgenAlgorithm): void {
-    this.algorithmSelected.emit(algorithm);
+    this.stateService.setBoardgenAlgorithm(algorithm);
   }
 
   selectAdjacencyType(adjacency: AdjacencyType): void {
-    this.selectedAdjacency = adjacency;
-    this.adjacencyChanged.emit(this.selectedAdjacency);
+    this.stateService.setSelectedAdjacencyType(adjacency);
   }
 
   toggleMode(): void {
-    this.currentMode = this.currentMode === GameMode.GAME ? GameMode.DEBUG : GameMode.GAME;
-    this.modeChanged.emit(this.currentMode);
+    const newMode = this.currentMode === GameMode.GAME ? GameMode.DEBUG : GameMode.GAME;
+    this.stateService.setMode(newMode);
+  }
+
+  toggleInfiniteScroll(): void {
+    this.stateService.setInfiniteScroll(!this.isInfiniteScroll)
   }
 
   getAlgorithmEnumKeys(): string[] {
     return Object.keys(BoardgenAlgorithm);
   }
-  
+
   getAdjacencyEnumKeys(): string[] {
     return Object.keys(AdjacencyType);
   }

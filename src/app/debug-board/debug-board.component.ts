@@ -13,14 +13,6 @@ export class DebugBoardComponent {
   @Input()
   cells: Cell[][] = []
 
-  minefield: number[][] = [];
-  rows: number = 16;
-  columns: number = 31;
-  mines: number = 99;
-  selectedAlgorithm: BoardgenAlgorithm = BoardgenAlgorithm.Zero
-  Algorithm = BoardgenAlgorithm //expose to template
-
-
   //todo: set seed, set algorithm, button to reload that shows seed
   constructor(private matrixGeneratorService: MatrixGeneratorService) { }
 
