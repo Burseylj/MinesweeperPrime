@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardgenAlgorithm, Cell, CellEvent, GameMode, Vector } from 'src/types/mspp-types';
 import { MatrixGeneratorService } from '../core/matrix-generator.service';
-import { StateService } from '../core/state-service.service';
+import { StateService } from '../core/state.service';
 
 @Component({
   selector: 'mspp-game-container',
@@ -12,9 +12,10 @@ export class GameContainerComponent {
   mode: GameMode = GameMode.GAME
   cells: Cell[][] = [];
   boardgenAlgoritm: BoardgenAlgorithm = BoardgenAlgorithm.Zero
-  rows: number = 16;
-  columns: number = 31;
-  mines: number = 99;
+  rows: number = 1000;
+  columns: number = 31*2;
+  mineDensity: number = 50/(16*31)
+  mines: number = Math.round(this.rows*this.columns*this.mineDensity);
   selectedAdjacencyType = AdjacencyType.Standard;
   adjacencies = AdjacencyConfig[this.selectedAdjacencyType];
 

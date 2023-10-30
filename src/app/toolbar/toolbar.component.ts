@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StateService } from '../core/state-service.service';
+import { StateService } from '../core/state.service';
 import { BoardgenAlgorithm, GameMode, AdjacencyType } from 'src/types/mspp-types';
 
 @Component({
