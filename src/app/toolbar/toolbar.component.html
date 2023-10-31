@@ -1,18 +1,33 @@
-<select [(ngModel)]="selectedAlgorithm" (change)="selectBoardgenAlgorithm(selectedAlgorithm)">
-  <option *ngFor="let algorithm of getAlgorithmEnumKeys()" [value]="algorithm">{{ algorithm }}</option>
-</select>
+<div class="form-group">
+  <select [(ngModel)]="selectedAlgorithm" (change)="selectBoardgenAlgorithm(selectedAlgorithm)">
+    <option *ngFor="let algorithm of getAlgorithmEnumKeys()" [value]="algorithm">{{ algorithm }}</option>
+  </select>
+</div>
 
-<select [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
-  <option *ngFor="let adjacency of getAdjacencyEnumKeys()" [value]="adjacency">{{ adjacency }}</option>
-</select>
+<div class="form-group">
+  <select [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
+    <option *ngFor="let adjacency of getAdjacencyEnumKeys()" [value]="adjacency">{{ adjacency }}</option>
+  </select>
+</div>
 
-<!-- ToolbarComponent template -->
-<button (click)="toggleMode()">
-    Toggle Mode: {{ currentMode }}
-</button>
+<div class="form-group">
+  <form #mineDensityForm="ngForm">
+    <label for="mineDensity">Mines per 100 (standard is 10-20):</label>
+    <input id="mineDensity" name="mineDensity" type="text" [(ngModel)]="mineDensity" #mineDensityField="ngModel" (blur)="validateMineDensity(mineDensityField.value)">
+    <div *ngIf="mineDensityError" class="error-message">
+      Mine density should be a number between 0 and 100.
+    </div>
+  </form>
+</div>
 
-<!-- ToolbarComponent template -->
-<button (click)="toggleInfiniteScroll()">
-  Toggle infiniteScroll: {{ isInfiniteScroll }}
-</button>
-  
+<div class="form-group">
+  <select [(ngModel)]="boardSize" (change)="selectBoardSize(boardSize)">
+    <option *ngFor="let size of getBoardSizeEnumKeys()" [value]="size">{{ size }}</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <button (click)="toggleMode()">
+      Toggle Mode: {{ currentMode }}
+  </button>
+</div>

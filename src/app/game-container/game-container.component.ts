@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardgenAlgorithm, Cell, CellEvent, GameMode, Vector } from 'src/types/mspp-types';
+import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardSize, BoardgenAlgorithm, Cell, CellEvent, GameMode, Vector } from 'src/types/mspp-types';
 import { MatrixGeneratorService } from '../core/matrix-generator.service';
 import { StateService } from '../core/state.service';
 
@@ -13,9 +13,8 @@ export class GameContainerComponent {
   cells: Cell[][] = [];
   boardgenAlgoritm: BoardgenAlgorithm = BoardgenAlgorithm.Zero
   rows: number = 1000;
-  columns: number = 31*2;
-  mineDensity: number = 50/(16*31)
-  mines: number = Math.round(this.rows*this.columns*this.mineDensity);
+  columns: number = 31;
+  mines: number = 10;
   selectedAdjacencyType = AdjacencyType.Standard;
   adjacencies = AdjacencyConfig[this.selectedAdjacencyType];
 
@@ -40,7 +39,37 @@ export class GameContainerComponent {
       this.boardgenAlgoritm = alg
     })
 
+    this.stateService.mineDensity$.subscribe((density: number) => {
+      this.mines = Math.round(this.rows*this.columns *(density/100))
+    })
+
+    this.stateService.boardSize$.subscribe((size: BoardSize) => {
+      this.setRowsAndColumns(size)
+    })
+
   }
+
+  setRowsAndColumns(boardSize: BoardSize): void {
+    switch (boardSize) {
+      case BoardSize.Small:
+        this.rows = 9;
+        this.columns = 9;
+        break;
+      case BoardSize.Medium:
+        this.rows = 16;
+        this.columns = 16;
+        break;
+      case BoardSize.Large:
+        this.rows = 16;
+        this.columns = 30;
+        break;
+      case BoardSize.Infinite:
+        this.rows = 1
+        this.columns = 1
+        break;
+    }
+  }
+  
 
   
   handleCellClickedEvent(event: CellEvent): void {

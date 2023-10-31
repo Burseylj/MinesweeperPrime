@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
-import { BoardgenAlgorithm, GameMode } from 'src/types/mspp-types';
+import { FormsModule } from '@angular/forms';
 
 describe('ToolbarComponent', () => {
   let component: ToolbarComponent;
@@ -9,7 +9,8 @@ describe('ToolbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ToolbarComponent ]
+      declarations: [ ToolbarComponent ],
+      imports: [ FormsModule ]
     })
     .compileComponents();
   });

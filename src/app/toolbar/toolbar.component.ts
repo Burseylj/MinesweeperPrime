@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from '../core/state.service';
-import { BoardgenAlgorithm, GameMode, AdjacencyType } from 'src/types/mspp-types';
+import { BoardgenAlgorithm, GameMode, AdjacencyType, BoardSize } from 'src/types/mspp-types';
 
 @Component({
   selector: 'mspp-toolbar',
@@ -12,8 +12,9 @@ export class ToolbarComponent implements OnInit {
   GameMode = GameMode;
   Algorithm = BoardgenAlgorithm;
   AdjacencyType = AdjacencyType;
+  BoardSize = BoardSize;
 
-  constructor(private stateService: StateService) {}
+  constructor(private stateService: StateService) { }
 
   ngOnInit(): void {
     // Subscribe to the observable to update component state
@@ -29,15 +30,17 @@ export class ToolbarComponent implements OnInit {
       this.selectedAlgorithm = alg;
     });
 
-    this.stateService.isInfiniteScroll$.subscribe(scroll => {
-      this.isInfiniteScroll = scroll;
+    this.stateService.boardSize$.subscribe(size => {
+      this.boardSize = size;
     });
   }
 
   currentMode: GameMode = GameMode.GAME;
   selectedAlgorithm: BoardgenAlgorithm = BoardgenAlgorithm.Zero;
   selectedAdjacency: AdjacencyType = AdjacencyType.Standard;
-  isInfiniteScroll: boolean = false
+  boardSize: BoardSize = BoardSize.Small
+  mineDensity: number = 12
+  mineDensityError: boolean = false
 
   selectBoardgenAlgorithm(algorithm: BoardgenAlgorithm): void {
     this.stateService.setBoardgenAlgorithm(algorithm);
@@ -47,13 +50,24 @@ export class ToolbarComponent implements OnInit {
     this.stateService.setSelectedAdjacencyType(adjacency);
   }
 
+  selectBoardSize(size: BoardSize): void {
+    this.stateService.setboardSize(size)
+  }
+
+
+  validateMineDensity(value: any): void {
+    const numericValue = Number(value);
+    if (numericValue === null || isNaN(numericValue) || numericValue < 0 || numericValue > 100) {
+      this.mineDensityError = true;
+    } else {
+      this.mineDensityError = false;
+    }
+  }
+  
+
   toggleMode(): void {
     const newMode = this.currentMode === GameMode.GAME ? GameMode.DEBUG : GameMode.GAME;
     this.stateService.setMode(newMode);
-  }
-
-  toggleInfiniteScroll(): void {
-    this.stateService.setInfiniteScroll(!this.isInfiniteScroll)
   }
 
   getAlgorithmEnumKeys(): string[] {
@@ -62,5 +76,9 @@ export class ToolbarComponent implements OnInit {
 
   getAdjacencyEnumKeys(): string[] {
     return Object.keys(AdjacencyType);
+  }
+
+  getBoardSizeEnumKeys(): string[] {
+    return Object.keys(BoardSize)
   }
 }
