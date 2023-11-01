@@ -9,6 +9,7 @@
   <mspp-game-board *ngSwitchCase="GameMode.GAME" 
     [cells]="cells" 
     [adjacencies]="adjacencies"
+    (scrolled)="handleScroll($event)"
     (cellClicked)="handleCellClickedEvent($event)" 
     (cellRightClicked)="handleCellRightClickedEvent($event)"></mspp-game-board>
   <mspp-debug-board *ngSwitchCase="GameMode.DEBUG" [cells]="cells"></mspp-debug-board>

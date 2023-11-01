@@ -51,7 +51,11 @@ export class ToolbarComponent implements OnInit {
   }
 
   selectBoardSize(size: BoardSize): void {
-    this.stateService.setboardSize(size)
+    this.stateService.setBoardSize(size)
+  }
+
+  setMineDensity(density: number): void {
+    this.stateService.setMineDensity(density)
   }
 
 
@@ -61,6 +65,7 @@ export class ToolbarComponent implements OnInit {
       this.mineDensityError = true;
     } else {
       this.mineDensityError = false;
+      this.setMineDensity(numericValue)
     }
   }
   

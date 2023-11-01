@@ -16,6 +16,9 @@ export class GameBoardComponent implements OnInit {
   cellClicked: EventEmitter<CellEvent> = new EventEmitter<CellEvent>();
   @Output()
   cellRightClicked: EventEmitter<CellEvent> = new EventEmitter<CellEvent>();
+  @Output() 
+  scrolled = new EventEmitter<number>();
+
 
   ngOnInit(): void {
   }
@@ -27,6 +30,10 @@ export class GameBoardComponent implements OnInit {
   onCellRightClicked(row: number, col: number, $event: MouseEvent): void {
     $event.preventDefault();
     this.cellRightClicked.emit({ row, col });
+  }
+
+  onScroll(event: number): void {
+    this.scrolled.emit(event);
   }
 
 

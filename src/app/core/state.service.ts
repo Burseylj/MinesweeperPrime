@@ -38,7 +38,7 @@ export class StateService {
     this._adjacencies.next(AdjacencyConfig[newAdjacencyType]);
   }
 
-  setboardSize(size: BoardSize): void {
+  setBoardSize(size: BoardSize): void {
     this._boardSize.next(size)
   }
 

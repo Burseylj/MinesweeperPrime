@@ -1,7 +1,10 @@
-<cdk-virtual-scroll-viewport scrollWindow itemSize="20" class="viewport">
+<cdk-virtual-scroll-viewport scrollWindow itemSize="20" class="viewport" 
+            (scrolledIndexChange)="onScroll($event)">
     <div *cdkVirtualFor="let row of cells; let rowIdx = index" class="row">
-        <span *ngFor="let cell of row; let colIdx = index" [class.revealed]="cell.isRevealed"
-            [class.mine]="cell.isMine && cell.isRevealed" (click)="onCellClicked(rowIdx, colIdx, $event)"
+        <span *ngFor="let cell of row; let colIdx = index" 
+        [class.revealed]="cell.isRevealed"
+            [class.mine]="cell.isMine && cell.isRevealed"     
+            (click)="onCellClicked(rowIdx, colIdx, $event)"
             (contextmenu)="onCellRightClicked(rowIdx, colIdx, $event)">
             {{ getCellContent(cell) }}
         </span>

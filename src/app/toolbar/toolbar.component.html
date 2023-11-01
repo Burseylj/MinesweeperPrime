@@ -12,10 +12,13 @@
 
 <div class="form-group">
   <form #mineDensityForm="ngForm">
-    <label for="mineDensity">Mines per 100 (standard is 10-20):</label>
-    <input id="mineDensity" name="mineDensity" type="text" [(ngModel)]="mineDensity" #mineDensityField="ngModel" (blur)="validateMineDensity(mineDensityField.value)">
+    <label for="mineDensity">Mines per 100 (standard is 10-20, high values may crash the window):</label>
+    <input id="mineDensity" name="mineDensity" type="text" 
+    [(ngModel)]="mineDensity" 
+    #mineDensityField="ngModel" 
+    (blur)="validateMineDensity(mineDensityField.value)">
     <div *ngIf="mineDensityError" class="error-message">
-      Mine density should be a number between 0 and 100.
+      Mine density should be a number between 0 and 100. 
     </div>
   </form>
 </div>

@@ -40,6 +40,7 @@ export enum BoardSize {
   Small = "Small",
   Medium = "Medium",
   Large = "Large",
+  Massive = "Massive",
   Infinite = "Infinite"
 }
 
