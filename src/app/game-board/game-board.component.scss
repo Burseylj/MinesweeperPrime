@@ -1,24 +1,35 @@
 span {
+  display: inline-block;
+  vertical-align: top;
+  font-family: monospace;
+  text-align: center;
+  line-height: 1.5;
+  border: 1px solid black;
+  user-select: none;
+
+  &:not(.revealed) {
+    box-shadow: inset -2px -2px 0px 0px rgba(146, 146, 146, 0.4901960784);
+    border-top: 2px solid #eee;
+    border-left: 2px solid #eee;
+    margin-top: 1px;
+    margin-left: 1px;
+    background: #c4c4c4;
+    width: 18px;
+    height: 18px;
+    outline: 1px solid black;
+  }
+
+  &.revealed {
     width: 20px;
     height: 20px;
-    display: inline-block;
-    border: 1px solid black;
-    vertical-align: top;
-    font-family: monospace;
-    text-align: center;
-    line-height: 1.5;
-    user-select: none;
+    background-color: rgb(234, 233, 233);
   }
-  
-  .revealed {
-    background-color: lightgray;
-  }
-  
-  .mine {
-    background-color: red;
-  }
+}
+
+.mine {
+  background-color: red;
+}
 
 .row {
   height: 21.6px;
 }
-  
