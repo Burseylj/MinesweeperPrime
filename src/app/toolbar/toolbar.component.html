@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label for="alg">Board genration algorithm: </label>
+  <label for="alg">Board genration algorithm(the best are gaussian, perlin, simplex): </label>
   <select id="alg" [(ngModel)]="selectedAlgorithm" (change)="selectBoardgenAlgorithm(selectedAlgorithm)">
     <option *ngFor="let algorithm of getAlgorithmEnumKeys()" [value]="algorithm">{{ algorithm }}</option>
   </select>
