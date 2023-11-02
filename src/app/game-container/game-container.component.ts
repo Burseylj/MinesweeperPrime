@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardSize, BoardgenAlgorithm, Cell, CellEvent, GameMode, Vector } from 'src/types/mspp-types';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardSize, BoardgenAlgorithm, Cell, Position, GameMode, Vector } from 'src/types/mspp-types';
 import { MatrixGeneratorService } from '../core/matrix-generator.service';
 import { StateService } from '../core/state.service';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 
 @Component({
@@ -22,14 +23,16 @@ export class GameContainerComponent {
   adjacencies = AdjacencyConfig[this.selectedAdjacencyType];
   boardSize: BoardSize | null = null
 
-
-  thresholdForLoadingInf = 50
+  thresholdForLoadingInf = 70
   cellsToLoadInf = 30
 
   private scrollSubject$ = new Subject<number>();
 
   //expose to template
   GameMode = GameMode
+
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+
 
   constructor(private matrixGeneratorService: MatrixGeneratorService,
     private cdr: ChangeDetectorRef,
@@ -58,7 +61,7 @@ export class GameContainerComponent {
     })
 
     this.scrollSubject$.pipe(
-      debounceTime(300) // time in milliseconds
+      debounceTime(300) 
     ).subscribe((event: number) => {
       this.debouncedHandleScroll(event);
     });
@@ -106,12 +109,58 @@ export class GameContainerComponent {
     }
   }
 
-  private addMoreRows(numRows: number): void {
-    const newCells = this.getCells(this.getMatrix(numRows, this.colCount, this.mineDensity));
-    this.cells = this.cells.concat(newCells);
+  addMoreRows(numRows: number): void {
+  const lastOldRowIndex = this.cells.length - 1;
+  const newCells = this.cells.concat(this.getCells(this.getMatrix(numRows, this.colCount, this.mineDensity)));
+
+  // Recalculate adjacency for these rows since we combined two boards
+  this.recalculateRowAdjacency(newCells, lastOldRowIndex);
+  this.recalculateRowAdjacency(newCells, lastOldRowIndex + 1);
+
+  this.revealAdjacentIfNeeded(newCells, lastOldRowIndex)
+  
+  // Update cells and force change detection
+  this.cells = newCells;
+  this.cdr.detectChanges();
+  this.viewport?.checkViewportSize();
+}
+
+private revealAdjacentIfNeeded(newCells: Cell[][], lastOldRowIndex: number): void {
+  const cellsToReveal: Position[] = [];
+
+  // Populate the array with positions of cells
+  for (let colIndex = 0; colIndex < newCells[lastOldRowIndex].length; colIndex++) {
+    const cell = newCells[lastOldRowIndex][colIndex];
+    if (!cell.isMine && cell.isRevealed && cell.adjacentMines === 0) {
+      for (const { x, y } of this.adjacencies) {
+        const newRow = lastOldRowIndex + x;
+        const newCol = colIndex + y;
+        // Ensure the adjacent cell is within bounds
+        if (newRow >= 0 && newRow < newCells.length && newCol >= 0 && newCol < newCells[0].length) {
+          // Add position to the array
+          cellsToReveal.push({ row: newRow, col: newCol });
+        }
+      }
+    }
   }
 
-  handleCellClickedEvent(event: CellEvent): void {
+  // Now reveal each cell that has been flagged for reveal
+  cellsToReveal.forEach(position => {
+    this.revealCell(newCells, position.row, position.col);
+  });
+}
+
+
+
+  recalculateRowAdjacency(cells: Cell[][], rowIndex: number): void {
+    const row = cells[rowIndex];
+    for (let colIndex = 0; colIndex < row.length; colIndex++) {
+      cells[rowIndex][colIndex].adjacentMines = this.countAdjacentMines(rowIndex, colIndex, cells);
+    }
+  }
+
+
+  handleCellClickedEvent(event: Position): void {
     const cell = this.cells[event.row][event.col];
     if (!cell.isMarked) {
 
@@ -120,26 +169,25 @@ export class GameContainerComponent {
         cell.isRevealed = true
         return;
       } else {
-
-        this.revealAdjacentCells(event.row, event.col)
+        this.revealCell(this.cells, event.row, event.col)
       }
     }
   }
 
-  private revealAdjacentCells(row: number, column: number): void {
+  revealCell(cells: Cell[][], row: number, column: number): void {
     const stack: { row: number, col: number }[] = [{ row, col: column }];
     while (stack.length > 0) {
       const { row, col } = stack.pop()!;
 
-      if (!(this.cells[row][col].isRevealed || this.cells[row][col].isMarked)) {
-        this.cells[row][col].isRevealed = true;
+      if (!(cells[row][col].isRevealed || cells[row][col].isMarked)) {
+        cells[row][col].isRevealed = true;
 
-        if (this.cells[row][col].adjacentMines === 0) {
+        if (cells[row][col].adjacentMines === 0) {
           for (const { x, y } of this.adjacencies) {
             const newRow = row + x;
             const newCol = col + y;
 
-            if (newRow >= 0 && newRow < this.cells.length && newCol >= 0 && newCol < this.cells[0].length) {
+            if (newRow >= 0 && newRow < cells.length && newCol >= 0 && newCol < cells[0].length) {
               stack.push({ row: newRow, col: newCol });
             }
           }
@@ -148,7 +196,7 @@ export class GameContainerComponent {
     }
   }
 
-  handleCellRightClickedEvent(event: CellEvent): void {
+  handleCellRightClickedEvent(event: Position): void {
     const cell = this.cells[event.row][event.col];
     if (!cell.isRevealed) {
       cell.isMarked = !cell.isMarked;
@@ -160,7 +208,7 @@ export class GameContainerComponent {
     this.cdr.detectChanges()
   }
 
-  private getMatrix(rows: number, columns: number, mineDensity: number): BinaryMatrix {
+  getMatrix(rows: number, columns: number, mineDensity: number): BinaryMatrix {
     const mines = this.getNumMines(rows, columns, mineDensity)
     switch (this.boardgenAlgoritm) {
       case BoardgenAlgorithm.Zero:
@@ -188,34 +236,42 @@ export class GameContainerComponent {
     return Math.round(rows * cols * (mineDensity / 100))
   }
 
-
-  private getCells(matrix: BinaryMatrix): Cell[][] {
-    return matrix.map((row, rowIndex) => {
+  //note: I don't love doing this in two stages, because I don't like creating data in a state that is semi-correct.
+  // however, this will make things much less ugly when we do inf scroll
+  getCells(matrix: BinaryMatrix): Cell[][] {
+    const cellMatrix = matrix.map((row, rowIndex) => {
       return row.map((element, colIndex) => {
-        const hasMine = element === 1
-        const adjacentMines = this.countAdjacentMines(rowIndex, colIndex, matrix);
-
         return {
-          isMine: hasMine,
+          isMine: element === 1,
           isRevealed: false,
           isMarked: false,
-          adjacentMines: adjacentMines
+          adjacentMines: 0  // Initialize with 0, will populate this later
         };
       });
     });
+
+    for (let rowIndex = 0; rowIndex < cellMatrix.length; rowIndex++) {
+      for (let colIndex = 0; colIndex < cellMatrix[rowIndex].length; colIndex++) {
+        cellMatrix[rowIndex][colIndex].adjacentMines = this.countAdjacentMines(rowIndex, colIndex, cellMatrix);
+      }
+    }
+
+    return cellMatrix;
   }
 
-  private countAdjacentMines(rowIndex: number, colIndex: number, matrix: BinaryMatrix) {
-    let adjacentMines = 0
+
+  private countAdjacentMines(rowIndex: number, colIndex: number, matrix: Cell[][]): number {
+    let adjacentMines = 0;
     for (const { x, y } of this.adjacencies) {
       const newRow = rowIndex + x;
       const newCol = colIndex + y;
       if (newRow >= 0 && newRow < matrix.length && newCol >= 0 && newCol < matrix[0].length) {
-        if (matrix[newRow][newCol] === 1) {
+        if (matrix[newRow][newCol].isMine) {
           adjacentMines++;
         }
       }
     }
     return adjacentMines;
   }
+
 }

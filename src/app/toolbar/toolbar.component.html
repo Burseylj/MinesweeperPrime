@@ -1,18 +1,20 @@
 <div class="form-group">
-  <select [(ngModel)]="selectedAlgorithm" (change)="selectBoardgenAlgorithm(selectedAlgorithm)">
+  <label for="alg">Board geeration algorithm: </label>
+  <select id="alg" [(ngModel)]="selectedAlgorithm" (change)="selectBoardgenAlgorithm(selectedAlgorithm)">
     <option *ngFor="let algorithm of getAlgorithmEnumKeys()" [value]="algorithm">{{ algorithm }}</option>
   </select>
 </div>
 
 <div class="form-group">
-  <select [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
+  <label for="adjacency">Adjacency type (this is not as interesting as I hoped): </label>
+  <select id="adjacency" [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
     <option *ngFor="let adjacency of getAdjacencyEnumKeys()" [value]="adjacency">{{ adjacency }}</option>
   </select>
 </div>
 
 <div class="form-group">
   <form #mineDensityForm="ngForm">
-    <label for="mineDensity">Mines per 100 (standard is 10-20, high values may crash the window):</label>
+    <label for="mineDensity">Mines per 100 (standard is 10-20, high values may crash the window): </label>
     <input id="mineDensity" name="mineDensity" type="text" 
     [(ngModel)]="mineDensity" 
     #mineDensityField="ngModel" 
@@ -24,13 +26,14 @@
 </div>
 
 <div class="form-group">
-  <select [(ngModel)]="boardSize" (change)="selectBoardSize(boardSize)">
+  <label for="size">Board size: </label>
+  <select id="size" [(ngModel)]="boardSize" (change)="selectBoardSize(boardSize)">
     <option *ngFor="let size of getBoardSizeEnumKeys()" [value]="size">{{ size }}</option>
   </select>
 </div>
 
 <div class="form-group">
   <button (click)="toggleMode()">
-      Toggle Mode: {{ currentMode }}
+      Toggle debug mode: {{ currentMode }}
   </button>
 </div>

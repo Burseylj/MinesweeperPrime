@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CellEvent, Cell, Vector } from 'src/types/mspp-types';
+import { Position, Cell, Vector } from 'src/types/mspp-types';
 
 @Component({
   selector: 'mspp-game-board',
@@ -13,9 +13,9 @@ export class GameBoardComponent implements OnInit {
   @Input()
   adjacencies: Vector[] = []
   @Output()
-  cellClicked: EventEmitter<CellEvent> = new EventEmitter<CellEvent>();
+  cellClicked: EventEmitter<Position> = new EventEmitter<Position>();
   @Output()
-  cellRightClicked: EventEmitter<CellEvent> = new EventEmitter<CellEvent>();
+  cellRightClicked: EventEmitter<Position> = new EventEmitter<Position>();
   @Output() 
   scrolled = new EventEmitter<number>();
 

@@ -61,7 +61,7 @@ export enum GameMode {
   DEBUG = 'debug'
 }
 
-export interface CellEvent {
+export interface Position {
   row: number;
   col: number;
 }
