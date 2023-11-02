@@ -4,6 +4,10 @@ span {
     display: inline-block;
     border: 1px solid black;
     vertical-align: top;
+    font-family: monospace;
+    text-align: center;
+    line-height: 1.5;
+    user-select: none;
   }
   
   .revealed {

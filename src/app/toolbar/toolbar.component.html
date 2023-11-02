@@ -1,12 +1,12 @@
 <div class="form-group">
-  <label for="alg">Board genration algorithm(the best are gaussian, perlin, simplex): </label>
+  <label for="alg">Board genration algorithm (the best are gaussian, perlin, simplex): </label>
   <select id="alg" [(ngModel)]="selectedAlgorithm" (change)="selectBoardgenAlgorithm(selectedAlgorithm)">
     <option *ngFor="let algorithm of getAlgorithmEnumKeys()" [value]="algorithm">{{ algorithm }}</option>
   </select>
 </div>
 
 <div class="form-group">
-  <label for="adjacencyType">Adjacency type (this is not as interesting as I hoped): </label>
+  <label for="adjacencyType">Adjacency type (No diagonal will mean that you only get hints about mines that are left-right and up-down from a given cell): </label>
   <select id="adjacencyType" [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
     <option *ngFor="let adjacency of getAdjacencyEnumKeys()" [value]="adjacency">{{ adjacency }}</option>
   </select>
