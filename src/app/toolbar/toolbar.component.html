@@ -6,8 +6,8 @@
 </div>
 
 <div class="form-group">
-  <label for="adjacency">Adjacency type (this is not as interesting as I hoped): </label>
-  <select id="adjacency" [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
+  <label for="adjacencyType">Adjacency type (this is not as interesting as I hoped): </label>
+  <select id="adjacencyType" [(ngModel)]="selectedAdjacency" (change)="selectAdjacencyType(selectedAdjacency)">
     <option *ngFor="let adjacency of getAdjacencyEnumKeys()" [value]="adjacency">{{ adjacency }}</option>
   </select>
 </div>
