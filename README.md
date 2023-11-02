@@ -16,22 +16,22 @@ Minesweeper game with a bunch of weird tweaks to the gameplay
 
 Clone the repository to your local machine:
 
-\```bash
+```bash
 git clone https://github.com/yourusername/infinite-minesweeper.git
 cd infinite-minesweeper
-\```
+```
 
 Install the dependencies:
 
-\```bash
+```bash
 npm install
-\```
+```
 
 Run the application:
 
-\```bash
+```bash
 ng serve
-\```
+```
 
 Navigate to `http://localhost:4200/` in your browser to start playing!
 
