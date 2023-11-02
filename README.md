@@ -47,6 +47,6 @@ Navigate to `http://localhost:4200/` in your browser to start playing!
 
 Run the test suite with:
 
-\```bash
+```bash
 ng test
-\```
+```
