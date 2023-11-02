@@ -4,24 +4,21 @@ span {
   font-family: monospace;
   text-align: center;
   line-height: 1.5;
-  border: 1px solid black;
+  border: 1px solid #0000006b;
+  width: 20px;
+  height: 20px;
   user-select: none;
 
   &:not(.revealed) {
-    box-shadow: inset -2px -2px 0px 0px rgba(146, 146, 146, 0.4901960784);
-    border-top: 2px solid #eee;
-    border-left: 2px solid #eee;
-    margin-top: 1px;
-    margin-left: 1px;
-    background: #c4c4c4;
+    border: 2px outset #e9e9e9;
+    // reduce width & height to make room for bigger border
+    // total width/height stays the same (22px)
     width: 18px;
     height: 18px;
-    outline: 1px solid black;
+    background: #c4c4c4;
   }
 
   &.revealed {
-    width: 20px;
-    height: 20px;
     background-color: rgb(234, 233, 233);
   }
 }
