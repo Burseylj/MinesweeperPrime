@@ -1,13 +1,21 @@
-<cdk-virtual-scroll-viewport scrollWindow itemSize="21.6" bufferSize="20" class="viewport" 
-            (scrolledIndexChange)="onScroll($event)">
-    <div *cdkVirtualFor="let row of cells; let rowIdx = index" class="row">
-        <span *ngFor="let cell of row; let colIdx = index" 
-        [class.revealed]="cell.isRevealed"
-            [class.mine]="cell.isMine && cell.isRevealed"     
-            (click)="onCellClicked(rowIdx, colIdx, $event)"
-            (contextmenu)="onCellRightClicked(rowIdx, colIdx, $event)">
-            {{ getCellContent(cell) }}
-        </span>
-        {{rowIdx}}
-    </div>
+<cdk-virtual-scroll-viewport
+  scrollWindow
+  itemSize="21.6"
+  bufferSize="20"
+  class="viewport"
+  (scrolledIndexChange)="onScroll($event)"
+>
+  <div *cdkVirtualFor="let row of cells; let rowIdx = index" class="row">
+    <span
+      *ngFor="let cell of row; let colIdx = index"
+      [attr.data-count]="cell.adjacentMines"
+      [class.revealed]="cell.isRevealed"
+      [class.mine]="cell.isMine && cell.isRevealed"
+      (click)="onCellClicked(rowIdx, colIdx, $event)"
+      (contextmenu)="onCellRightClicked(rowIdx, colIdx, $event)"
+    >
+      {{ getCellContent(cell) }}
+    </span>
+    {{ rowIdx }}
+  </div>
 </cdk-virtual-scroll-viewport>
