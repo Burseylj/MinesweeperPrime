@@ -1,7 +1,3 @@
-.row {
-  height: 21.6px;
-}
-
 span {
   display: inline-block;
   vertical-align: top;
@@ -9,14 +5,13 @@ span {
   text-align: center;
   line-height: 1.5;
   user-select: none;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
 
   &:not(.revealed) {
     background: #c4c4c4;
     border: 2px outset #e3e3e3;
-    // reduce width & height to make room for bigger border
-    // total width/height stays the same (22px)
-    width: 18px;
-    height: 18px;
 
     // put it above non-revealed cells
     position: relative;
@@ -25,12 +20,12 @@ span {
 
   &.revealed {
     background: white;
-    width: 22px;
-    height: 22px;
-    // remove border & use outline so the borders don't double up on each other
-    // outline doesn't increase the width of an element so it never doubles up
-    outline: 1px solid rgb(120, 120, 120);
+    border: 1px solid rgb(120, 120, 120); // Using border instead of outline
+    position: relative;
+    z-index: 2; // Ensure it's above non-revealed cells
   }
+
+
   &.mine {
     background-color: red;
   }
