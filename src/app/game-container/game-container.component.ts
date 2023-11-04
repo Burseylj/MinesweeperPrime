@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { AdjacencyConfig, AdjacencyType, BinaryMatrix, BoardSize, BoardgenAlgorithm, Cell, Position, GameMode, Vector } from 'src/types/mspp-types';
 import { MatrixGeneratorService } from '../core/matrix-generator.service';
 import { StateService } from '../core/state.service';
@@ -10,7 +10,8 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 @Component({
   selector: 'mspp-game-container',
   templateUrl: './game-container.component.html',
-  styleUrls: ['./game-container.component.scss']
+  styleUrls: ['./game-container.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameContainerComponent {
   mode: GameMode = GameMode.GAME
@@ -30,9 +31,6 @@ export class GameContainerComponent {
 
   //expose to template
   GameMode = GameMode
-
-  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
-
 
   constructor(private matrixGeneratorService: MatrixGeneratorService,
     private cdr: ChangeDetectorRef,
@@ -61,7 +59,7 @@ export class GameContainerComponent {
     })
 
     this.scrollSubject$.pipe(
-      debounceTime(300) 
+      debounceTime(100) 
     ).subscribe((event: number) => {
       this.debouncedHandleScroll(event);
     });
@@ -122,7 +120,6 @@ export class GameContainerComponent {
   // Update cells and force change detection
   this.cells = newCells;
   this.cdr.detectChanges();
-  this.viewport?.checkViewportSize();
 }
 
 private revealAdjacentIfNeeded(newCells: Cell[][], lastOldRowIndex: number): void {
@@ -205,7 +202,6 @@ private revealAdjacentIfNeeded(newCells: Cell[][], lastOldRowIndex: number): voi
 
   startGame(): void {
     this.cells = this.getCells(this.getMatrix(this.rowCount, this.colCount, this.mineDensity))
-    this.cdr.detectChanges()
   }
 
   getMatrix(rows: number, columns: number, mineDensity: number): BinaryMatrix {

@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Position, Cell, Vector } from 'src/types/mspp-types';
 
 @Component({
   selector: 'mspp-game-board',
   templateUrl: './game-board.component.html',
-  styleUrls: ['./game-board.component.scss']
+  styleUrls: ['./game-board.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameBoardComponent implements OnInit {
 
