@@ -12,54 +12,47 @@ span {
   &:not(.revealed) {
     background: #c4c4c4;
     border: 2px outset #e3e3e3;
-
-    // put it above non-revealed cells
-    position: relative;
-    z-index: 1;
   }
 
   &.revealed {
     background: white;
-    border: 1px solid rgb(120, 120, 120); // Using border instead of outline
-    position: relative;
-    z-index: 2; // Ensure it's above non-revealed cells
-  }
+    border: 1px solid rgb(120, 120, 120); 
 
+    &.mine {
+      background-color: red;
+      color: black !important;
+    }
 
-  &.mine {
-    background-color: red;
-    color: black !important;
-  }
+    &[data-count="1"] {
+      color: #0b0bfa;
+    }
 
-  &[data-count="1"] {
-    color: #0b0bfa;
-  }
+    &[data-count="2"] {
+      color: #007b00;
+    }
 
-  &[data-count="2"] {
-    color: #007b00;
-  }
+    &[data-count="3"] {
+      color: #f00;
+    }
 
-  &[data-count="3"] {
-    color: #f00;
-  }
+    &[data-count="4"] {
+      color: #00007b;
+    }
 
-  &[data-count="4"] {
-    color: #00007b;
-  }
+    &[data-count="5"] {
+      color: #7b0000;
+    }
 
-  &[data-count="5"] {
-    color: #7b0000;
-  }
+    &[data-count="6"] {
+      color: #007b7b;
+    }
 
-  &[data-count="6"] {
-    color: #007b7b;
-  }
+    &[data-count="7"] {
+      color: #0b0b0b;
+    }
 
-  &[data-count="7"] {
-    color: #0b0b0b;
-  }
-
-  &[data-count="8"] {
-    color: #7b7b7b;
+    &[data-count="8"] {
+      color: #7b7b7b;
+    }
   }
 }
