@@ -2,7 +2,7 @@
 
 ## Description
 
-Minesweeper game with a bunch of weird tweaks to the gameplay
+Minesweeper game with a variety of procedural generation mechanisms for game boards and an infinite scrolling feature. 
 
 ## Features
 
@@ -14,14 +14,10 @@ Minesweeper game with a bunch of weird tweaks to the gameplay
 
 ## Quick Start
 
-Clone the repository to your local machine:
+Game is hosted [here](https://burseylj.github.io/)
 
-```bash
-git clone https://github.com/yourusername/infinite-minesweeper.git
-cd infinite-minesweeper
-```
 
-Install the dependencies:
+To run locally, install the dependencies:
 
 ```bash
 npm install
@@ -33,7 +29,7 @@ Run the application:
 ng serve
 ```
 
-Navigate to `http://localhost:4200/` in your browser to start playing!
+Navigate to `http://localhost:4200/`
 
 ## Technologies
 
@@ -42,6 +38,12 @@ Navigate to `http://localhost:4200/` in your browser to start playing!
 - RxJS
 - SCSS
 - HTML5
+
+## Next steps:
+- The state mangement here is both inconsitent and over engineered for this project. I wanted to explore a couple options just out of interest.
+-  The Cell component is definitely doing too much right now, and a lot of it's behavior should be pulled out to a service.
+-  Would like to implement my own perlin noise algorithms, this is starting to be a lot of code for client side JS though.
+-  Would like to add easily recognizable geometric shapes (spirals, cubes, etc.) and sprinkle them into game boards. I think that being able to predict the shape of the game board to a certain extent adds a unique flavor to the game.
 
 ## Testing
 
